@@ -4,3 +4,10 @@
     flex-grow: 1;
     justify-content: center;
 }
+
+.logo {
+    height: 45px;
+    position: fixed;
+    top: 1px;
+    left: 10px;
+}

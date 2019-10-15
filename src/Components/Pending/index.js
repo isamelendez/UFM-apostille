@@ -16,7 +16,8 @@ constructor(props){
     super(props);
     this.state = {
     rows: [],
-    documents: []
+    documents: [],
+    hashdecano: ''
     }
 }
 
@@ -35,40 +36,51 @@ generarPDF(hashSecre, hashDir, hashIPFS, nombre){
 
         doc.setFontType('bold')
         // Fila, columna 
+        doc.setFontSize(18)
         doc.text(20, 280, 'Certificaciones UFM')
 
-        doc.setFontType('normal')
+        doc.setFontType('bold')
+        doc.setFontSize(14)
         doc.text(40, 300, 'Fecha:')
 
         doc.setFontType('italic')
+        doc.setFontSize(12)
         doc.text(55, 320, '15/OCT/2019')
 
-        doc.setFontType('normal')
+        doc.setFontType('bold')
+        doc.setFontSize(14)
         doc.text(40, 355, 'Hash del Archivo:')
 
         doc.setFontType('italic')
-        doc.text(55, 375, `'${hashIPFS}`)
+        doc.setFontSize(12)
+        doc.text(55, 375, `${hashIPFS}`)
 
-        doc.setFontType('normal')
+        doc.setFontType('bold')
+        doc.setFontSize(14)
         doc.text(40, 400, 'Hash Validación Secretaria: ')
 
         doc.setFontType('italic')
-        doc.text(55, 455, `'${hashSecre}'`)
+        doc.setFontSize(12)
+        doc.text(55, 420, `${hashSecre}`)
 
-        doc.setFontType('normal')
-        doc.text(40, 500, 'Hash Validación Director:')
-
-        doc.setFontType('italic')
-        doc.text(55, 555, `'${hashDir}'`)
-
-        doc.setFontType('normal')
-        doc.text(40, 600, 'Nombre del Archivo: ')
+        doc.setFontType('bold')
+        doc.setFontSize(14)
+        doc.text(40, 455, 'Hash Validación Director:')
 
         doc.setFontType('italic')
-        doc.text(55, 655, `'${nombre}'`)
+        doc.setFontSize(12)
+        doc.text(55, 475, `${hashDir}`)
+
+        doc.setFontType('bold')
+        doc.setFontSize(14)
+        doc.text(40, 500, 'Nombre del Archivo: ')
+
+        doc.setFontType('italic')
+        doc.setFontSize(12)
+        doc.text(55, 520, `${nombre}`)
         
         // Save the Data
-        doc.save('Generated'.pdf)
+        doc.save('certificadoUFM'.pdf)
   }
 
 
@@ -123,6 +135,7 @@ async signFile(hash, filename) {
 
 renderAccordion() {
     const files = this.state.documents
+    const hash = this.state.signedHash
     return (
         <div className="rootMain">
           {files.map((row) => (
@@ -146,7 +159,7 @@ renderAccordion() {
                 <Button variant="outlined" color="secondary" onClick={() => this.signFile(row.hashIpfs, row.fileName)}>
                     Validar archivo
                 </Button>
-                <Button variant="outlined" color="secondary" onClick={() => this.generarPDF(row.hashSecretaria, row.hashdir, row.hashIPFS, row.fileName)}>
+                <Button variant="outlined" color="secondary" onClick={() => this.generarPDF(row.hashSecretaria, hash, row.hashIpfs, row.fileName)}>
                     Generar PDF
                 </Button>
               </Typography>
