@@ -38,8 +38,6 @@ class Upload extends Component {
   }
 
 
-
-
   uploadFiles(fileItems) {
     this.setState({
       signed: false,

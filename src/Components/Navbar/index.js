@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import logo from './logoufm.png';
 import * as firebase from 'firebase';
 import { Redirect } from 'react-router-dom'
 
@@ -56,6 +57,7 @@ class Navbar extends Component {
                 textColor="secondary"
                 centered
             >
+              <img className="logo" src={logo} />
               <Link to={'./audit'}>
                 <Tab label="Auditar" />
               </ Link>
