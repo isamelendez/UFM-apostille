@@ -32,7 +32,8 @@ class Upload extends Component {
       // password: (localStorage.getItem('email').indexOf('secretaria') > -1) ? 'Bichomaster1' : 'Bichamaster1',
       // privateKey: (localStorage.getItem('email').indexOf('secretaria') > -1) ? '80e7ff26969d4a009d9b6724ea8c0ba7682a21685334cd063a7835ceca8ee906' : 'eb3b1ec302d3562d0934bf7795d8c2cb589fcadc5103a39c4db8d7ccb71fe9b6',
       secretaria: 'TDNEWLQIY3N45AYUHMD6TFZ3YLY4FGKF5HHKD7M5',
-      facultad: ''
+      facultad: '',
+      currentFile: localStorage.getItem('fileHash') ? localStorage.getItem('fileHash') : ''
     }
   }
 
@@ -92,6 +93,8 @@ class Upload extends Component {
   renderTable(files) {
     const json = files
     console.log("FILE", files[0])
+    const fileHash = this.state.currentFile
+    const hrefFile = `http://localhost:4000/getFile?hash=${fileHash}`
     return  (
       <div>
         <Table id='tabla'>
@@ -137,10 +140,12 @@ class Upload extends Component {
           </TableBody>
         </Table>
         <div className="buttonValid">
+          <Button href={hrefFile} target="_blank"> Descargar documento </Button>
           {this.state.signed ? null : <Button variant="contained" color="secondary" onClick={() => this.signFile()}> Validar </Button>}
           <div className="textContainer"> <p className="text"> Al validar los documentos usted esta firmando y autorizando la validez de los mismos. </p> </div>
         </div>
-        {this.renderDocument(files[0].name)}
+        <h1> Preview del Documento </h1>
+        {this.renderDocument(hrefFile) }
       </div>
     )
   }
@@ -163,6 +168,10 @@ class Upload extends Component {
                 const response = JSON.parse(file.serverId)
                 console.log('done', response)
                 localStorage.setItem('fileHash', response[0].hash)
+                this.setState({
+                  ... this.state,
+                  currentFile: response[0].hash
+                })
               }}
               onupdatefiles={ (fileItems) => this.uploadFiles(fileItems) }
             />
