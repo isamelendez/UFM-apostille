@@ -8,12 +8,24 @@ const fileUpload = require('express-fileupload')
 let nem = require("nem-sdk").default;
 var transferTransaction = nem.model.objects.get("transferTransaction");
 const pdf = require('pdf-parse');
+var mysql      = require('mysql');
 
 app.use(function(req,res,next){
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
   res.header('Access-Control-Allow-Header', 'Content-Type');
   next();
+})
+
+let connection = mysql.createConnection({
+  host     : 'goku.cwzshpcfjbsy.us-east-1.rds.amazonaws.com',
+  user     : 'admin',
+  password : 'Isabelgoku',
+  database : 'configuration'
+});
+connection.connect(function(err) {
+  if (err) throw err
+  console.log('connection successful')
 })
 
 //Connceting to the ipfs network via infura gateway
@@ -202,6 +214,54 @@ async function doTransaction(text){
           res.send(false)
       });
   }
+})
+
+app.get('/createapositilesecretaria', (req, res) => {
+  var filename = req.query.filename;
+  var ipfs = req.query.ipfs;
+  var hashSecre = req.query.hashsecre;
+  var correo = req.query.correo;
+  
+  connection.query(`insert into files (fileName, hashIpfs, hashSecretaria, hashAdmin, correo) values(${filename},${ipfs},${hashSecre}, 'no',${correo});`, function (error, results, fields) {
+    if (error) throw error;
+    console.log(results)
+    return res.status(200).send( results );
+  });
+})
+
+app.get('/createapositilesecretaria', (req, res) => {
+  // http://localhost:4000/createapostilesecretaria?filename=%22test.pdf%22&ipfs=%22slkdfj8u2ofj%22&hashsecre=%22sfdsd8f97897dfs%22&correo=%22hola@ufm.edu%22
+  var filename = req.query.filename;
+  var ipfs = req.query.ipfs;
+  var hashSecre = req.query.hashsecre;
+  var correo = req.query.correo;
+  
+  connection.query(`insert into files (fileName, hashIpfs, hashSecretaria, hashAdmin, correo) values(${filename},${ipfs},${hashSecre}, 'no',${correo});`, function (error, results, fields) {
+    if (error) throw error;
+    console.log(results)
+    return res.status(200).send( results );
+  });
+})
+
+app.get('/createapostiledecano', (req, res) => {
+  // http://localhost:4000/createapostiledecano?ipfs=%22sfljskdf%22&hash=%22sdf987sdf9g92lj%22
+  var hashipfs = req.query.ipfs
+  var hash = req.query.hash;
+    
+  connection.query(`update files set hashAdmin = ${hash} where hashIpfs = ${hashipfs};`, function (error, results, fields) {
+    if (error) throw error;
+    console.log(results)
+    return res.status(200).send( results );
+  });
+})
+
+app.get('/getdocuments', (req, res) => {
+    
+  connection.query(`select * from files where hashAdmin = 'no';`, function (error, results, fields) {
+    if (error) throw error;
+    console.log(results)
+    return res.status(200).send( results );
+  });
 })
 
 app.listen(4000, () => console.log('App listening on port 4000!'))

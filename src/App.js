@@ -6,8 +6,10 @@ import Upload from './Components/Upload';
 import Navbar from './Components/Navbar';
 import Login from './Components/Login';
 import Pending from './Components/Pending';
+import * as firebase from 'firebase';
 import Audit from './Components/Audit';
 class App extends Component {
+
   render() {
     const App = () => (
       <div id="main">
