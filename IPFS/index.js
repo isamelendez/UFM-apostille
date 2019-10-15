@@ -204,13 +204,15 @@ async function doTransaction(text){
     let common = nem.model.objects.create('common')(password,privateKey);
     var fileContent = nem.crypto.js.enc.Utf8.parse(text);
     var apostille = nem.model.apostille.create(common, `${name}`, fileContent, "UFM Certificados", nem.model.apostille.hashing["SHA256"], false, "", true, nem.model.network.data.testnet.id);
-    var timeStamp = await nem.com.requests.chain.time(endpoint);
-    const ts = Math.floor(timeStamp.receiveTimeStamp / 1000);
-                apostille.timeStamp = ts;
-                const due = 60;
-                apostille.deadline = ts + due * 60;
-                console.log(apostille);
-                var response;
+    // var timeStamp = await nem.com.requests.chain.time(endpoint);
+    // const ts = Math.floor(timeStamp.receiveTimeStamp / 1000);
+    //             apostille.timeStamp = ts;
+    //             const due = 60;
+    //             apostille.deadline = ts + due * 60;
+    //             console.log(apostille);
+    //             var response;
+            setTimeout(sendtransaction, 2000);
+            async function sendtransaction() {
                 try{
                     var response = await nem.model.transactions.send(common, apostille.transaction, endpoint);
                     if (response.code >= 2) {
@@ -232,6 +234,7 @@ async function doTransaction(text){
                 }catch(err){
                     res.send(err)
                 }
+            }
         }
     })
 
@@ -262,13 +265,15 @@ async function doTransaction(text){
       let common = nem.model.objects.create('common')(password,privateKey);
       var fileContent = nem.crypto.js.enc.Utf8.parse(text);
       var apostille = nem.model.apostille.create(common, `${name}`, fileContent, "UFM Certificados", nem.model.apostille.hashing["SHA256"], false, "", true, nem.model.network.data.testnet.id);
-      var timeStamp = await nem.com.requests.chain.time(endpoint);
-      const ts = Math.floor(timeStamp.receiveTimeStamp / 1000);
-                  apostille.timeStamp = ts;
-                  const due = 60;
-                  apostille.deadline = ts + due * 60;
-                  console.log(apostille);
-                  var response;
+      // var timeStamp = await nem.com.requests.chain.time(endpoint);
+      // const ts = Math.floor(timeStamp.receiveTimeStamp / 1000);
+                  // apostille.timeStamp = ts;
+                  // const due = 60;
+                  // apostille.deadline = ts + due * 60;
+                  // console.log(apostille);
+                  // var response;
+              setTimeout(sendtransaction, 2000);
+              async function sendtransaction() {
                   try{
                       var response = await nem.model.transactions.send(common, apostille.transaction, endpoint);
                       if (response.code >= 2) {
@@ -290,6 +295,7 @@ async function doTransaction(text){
                   }catch(err){
                       res.send(err)
                   }
+                }
           }
       })
 
