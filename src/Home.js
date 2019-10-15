@@ -9,7 +9,7 @@ function Home() {
   return (
     <div className="App">
         <Navbar />
-        <Upload />
+        <Login />
     </div>
   );
 }

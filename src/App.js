@@ -4,8 +4,11 @@ import './App.css';
 import Home from './Home';
 import Upload from './Components/Upload';
 import Navbar from './Components/Navbar';
+import Login from './Components/Login';
+import * as firebase from 'firebase';
 
 class App extends Component {
+
   render() {
     const App = () => (
       <div id="main">
