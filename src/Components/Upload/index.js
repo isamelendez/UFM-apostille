@@ -57,7 +57,7 @@ class Upload extends Component {
     let hash = localStorage.getItem('fileHash') //ipfs
     let fileName = this.state.files[0].name
     try {
-        const resp = await fetch(`http://localhost:4000/createapostile?hash=${hash}&password=${password}&private=${privateKey}&fileName=fileName`)
+        const resp = await fetch(`http://localhost:4000/apostilesecretaria?hash=${hash}&password=${password}&private=${privateKey}&nombre=${fileName}`)
         var response = await resp.json();
         if( response.message.indexOf('SUCCESS') >= 0 ) {
             console.log("signed success", response)
@@ -146,7 +146,7 @@ class Upload extends Component {
           <div className="textContainer"> <p className="text"> Al validar los documentos usted esta firmando y autorizando la validez de los mismos. </p> </div>
         </div>
         <h1> Preview del Documento </h1>
-        {this.renderDocument(hrefFile) }
+        {this.state.currentFile ? this.renderDocument(hrefFile) : null }
       </div>
     )
   }

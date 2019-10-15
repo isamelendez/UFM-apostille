@@ -46,6 +46,7 @@ app.post('/upload', (req, res, next) => {
   console.log("ejecuta", req.files.file.data)
   let uploadFile = req.files.file
   const fileName = req.files.file.name
+  console.log("file", uploadFile)
   upload(req,res,function(err) {
     if(err) {
         return res.end("Error uploading file.");
@@ -175,6 +176,123 @@ async function doTransaction(text){
       }
   })
 
+
+
+  app.get('/apostilesecretaria', async function(req, res){
+    let validCID = req.query.hash
+  
+    ipfs.files.get(validCID, function (err, files) {
+        files.forEach((file) => {
+          //console.log(file.path)
+          //console.log(file.content.toString('utf8'))
+  
+          // Para renderizar en browser
+          //res.contentType("application/pdf")
+          console.log("content", file.content)
+          doTransaction(file.content);
+  
+        })
+      })
+    // let dataBuffer = fs.readFileSync('test.pdf');
+  
+  async function doTransaction(text){
+    let privateKey = req.query.private
+    let password = req.query.password;
+    let ipfs = req.query.hash
+    let name = req.query.nombre;
+    var endpoint = nem.model.objects.create("endpoint")(nem.model.nodes.defaultTestnet, nem.model.nodes.defaultPort);
+    let common = nem.model.objects.create('common')(password,privateKey);
+    var fileContent = nem.crypto.js.enc.Utf8.parse(text);
+    var apostille = nem.model.apostille.create(common, `${name}`, fileContent, "UFM Certificados", nem.model.apostille.hashing["SHA256"], false, "", true, nem.model.network.data.testnet.id);
+    var timeStamp = await nem.com.requests.chain.time(endpoint);
+    const ts = Math.floor(timeStamp.receiveTimeStamp / 1000);
+                apostille.timeStamp = ts;
+                const due = 60;
+                apostille.deadline = ts + due * 60;
+                console.log(apostille);
+                var response;
+                try{
+                    var response = await nem.model.transactions.send(common, apostille.transaction, endpoint);
+                    if (response.code >= 2) {
+                        console.error(response.message);
+                    } else {
+                        console.log('RESPONSE', response);
+                        console.log("\nTransaction: " + response.message);
+                        console.log("\nCreate a file with the fileContent text and name it:\n" + apostille.data.file.name.replace(/\.[^/.]+$/, "") + " -- Apostille TX " + response.transactionHash.data + " -- Date DD/MM/YYYY" + "." + apostille.data.file.name.split('.').pop());
+                        console.log("When transaction is confirmed the file should audit successfully in Nano");
+                        console.log("\nYou can also take the following hash: " + response.transactionHash.data + " and put it into the audit.js example");
+                        await connection.query(`insert into files (fileName, hashIpfs, hashSecretaria, hashAdmin, correo) values('${name}','${ipfs}','${response.transactionHash.data}', 'no','imelendez@ufm.edu');`, function (error, results, fields) {
+                          if (error) throw error;
+                          console.log(results)
+                          // return res.status(200).send( results );
+                        });
+                    }
+                    console.log(response);
+                    res.send(response);
+                }catch(err){
+                    res.send(err)
+                }
+        }
+    })
+
+
+    app.get('/apostiledecano', async function(req, res){
+      let validCID = req.query.hash
+    
+      ipfs.files.get(validCID, function (err, files) {
+          files.forEach((file) => {
+            //console.log(file.path)
+            //console.log(file.content.toString('utf8'))
+    
+            // Para renderizar en browser
+            //res.contentType("application/pdf")
+            console.log("content", file.content)
+            doTransaction(file.content);
+    
+          })
+        })
+      // let dataBuffer = fs.readFileSync('test.pdf');
+    
+    async function doTransaction(text){
+      let privateKey = req.query.private
+      let password = req.query.password;
+      let ipfs = req.query.hash
+      let name = req.query.nombre;
+      var endpoint = nem.model.objects.create("endpoint")(nem.model.nodes.defaultTestnet, nem.model.nodes.defaultPort);
+      let common = nem.model.objects.create('common')(password,privateKey);
+      var fileContent = nem.crypto.js.enc.Utf8.parse(text);
+      var apostille = nem.model.apostille.create(common, `${name}`, fileContent, "UFM Certificados", nem.model.apostille.hashing["SHA256"], false, "", true, nem.model.network.data.testnet.id);
+      var timeStamp = await nem.com.requests.chain.time(endpoint);
+      const ts = Math.floor(timeStamp.receiveTimeStamp / 1000);
+                  apostille.timeStamp = ts;
+                  const due = 60;
+                  apostille.deadline = ts + due * 60;
+                  console.log(apostille);
+                  var response;
+                  try{
+                      var response = await nem.model.transactions.send(common, apostille.transaction, endpoint);
+                      if (response.code >= 2) {
+                          console.error(response.message);
+                      } else {
+                          console.log('RESPONSE', response);
+                          console.log("\nTransaction: " + response.message);
+                          console.log("\nCreate a file with the fileContent text and name it:\n" + apostille.data.file.name.replace(/\.[^/.]+$/, "") + " -- Apostille TX " + response.transactionHash.data + " -- Date DD/MM/YYYY" + "." + apostille.data.file.name.split('.').pop());
+                          console.log("When transaction is confirmed the file should audit successfully in Nano");
+                          console.log("\nYou can also take the following hash: " + response.transactionHash.data + " and put it into the audit.js example");
+                          await connection.query(`update files set hashAdmin = '${response.transactionHash.data}' where hashIpfs = '${ipfs}';`, function (error, results, fields) {
+                            if (error) throw error;
+                            console.log(results)
+                            // return res.status(200).send( results );
+                          });
+                      }
+                      console.log(response);
+                      res.send(response);
+                  }catch(err){
+                      res.send(err)
+                  }
+          }
+      })
+
   app.get('/auditapostile', async function(req, res){
     // localhost:3000/auditapostile?hash=
     let validCID = req.query.hashipfs
@@ -216,18 +334,18 @@ async function doTransaction(text){
   }
 })
 
-app.get('/createapositilesecretaria', (req, res) => {
-  var filename = req.query.filename;
-  var ipfs = req.query.ipfs;
-  var hashSecre = req.query.hashsecre;
-  var correo = req.query.correo;
+// app.get('/createapositilesecretaria', (req, res) => {
+//   var filename = req.query.filename;
+//   var ipfs = req.query.ipfs;
+//   var hashSecre = req.query.hashsecre;
+//   var correo = req.query.correo;
   
-  connection.query(`insert into files (fileName, hashIpfs, hashSecretaria, hashAdmin, correo) values(${filename},${ipfs},${hashSecre}, 'no',${correo});`, function (error, results, fields) {
-    if (error) throw error;
-    console.log(results)
-    return res.status(200).send( results );
-  });
-})
+//   connection.query(`insert into files (fileName, hashIpfs, hashSecretaria, hashAdmin, correo) values(${filename},${ipfs},${hashSecre}, 'no',${correo});`, function (error, results, fields) {
+//     if (error) throw error;
+//     console.log(results)
+//     return res.status(200).send( results );
+//   });
+// })
 
 app.get('/createapositilesecretaria', (req, res) => {
   // http://localhost:4000/createapostilesecretaria?filename=%22test.pdf%22&ipfs=%22slkdfj8u2ofj%22&hashsecre=%22sfdsd8f97897dfs%22&correo=%22hola@ufm.edu%22

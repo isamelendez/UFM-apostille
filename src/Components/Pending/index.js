@@ -52,7 +52,7 @@ async signFile(hash, filename) {
     let password = 'Bichamaster1'
     let privateKey = 'eb3b1ec302d3562d0934bf7795d8c2cb589fcadc5103a39c4db8d7ccb71fe9b6'
     try {
-        const resp = await fetch(`http://localhost:4000/createapostile?hash=${hash}&password=${password}&private=${privateKey}`) //CAMBIAAAAR
+        const resp = await fetch(`http://localhost:4000/apostiledecano?hash=${hash}&password=${password}&private=${privateKey}&nombre=${filename}`) //CAMBIAAAAR
         var response = await resp.json();
         if( response.message.indexOf('SUCCESS') >= 0 ) {
             console.log("signed success", response)
@@ -107,7 +107,7 @@ render() {
         <div className="App">
             <Navbar />
             <h1> Pedientes por validar </h1>
-            {(this.state.documents.length > 0) ? this.renderAccordion() : <h1>No files to show, yet.</h1>}
+            {(this.state.documents.length > 0) ? this.renderAccordion() : <h1>No hay archivos pendientes</h1>}
         </div>
     )
 }
