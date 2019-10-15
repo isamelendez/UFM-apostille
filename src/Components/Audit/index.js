@@ -66,9 +66,9 @@ class Audit extends Component {
     let hash = this.state.hash
     try {
         const resp = await fetch(`http://localhost:4000/auditapostile?hashipfs=${ipfs}&hash=${hash}`)
-        var response = await resp;
+        var response = await resp.json();
         console.log("file is", response)
-        if( response === "true") {
+        if( response.message === "valido") {
             this.setState({
               verified: true,
               isValid: true

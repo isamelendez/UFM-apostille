@@ -5,15 +5,46 @@ import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-
+import * as firebase from 'firebase';
+import { Redirect } from 'react-router-dom'
 
 class Navbar extends Component {
 
   constructor(props){
     super(props);
+    this.logout = this.logout.bind(this);
     this.state = {
-      rows: []
+      rows: [],
+      user: {}
     }
+  }
+
+  componentDidMount() {
+    this.authListener();
+  }
+
+  logout() {
+    firebase.auth().signOut();
+    this.renderRedirect()
+  }
+
+  authListener() { firebase.auth().onAuthStateChanged((user) => {
+    // console.log(user);
+    if (user) {
+      this.setState({ user });
+      // localStorage.setItem('user', user.uid);
+    } else {
+      this.setState({ user:null});
+      // localStorage.removeItem('user');
+    }
+
+
+    });
+  }
+
+  renderRedirect = () => {
+    console.log("redirect")
+    return <Redirect to='/' />
   }
 
   render() {
@@ -28,12 +59,11 @@ class Navbar extends Component {
               <Link to={'./audit'}>
                 <Tab label="Auditar" />
               </ Link>
-              <Link to={'./upload'}>
-                <Tab label="Upload" />
+              <Link to={this.state.user ? (localStorage.getItem('emailLogged').indexOf('decanatura') >=0) ? './pending' : './upload' : './'}>
+                <Tab label="Certificados UFM" />
               </Link>
-              <Link to={'./pending'}>
-                <Tab label="Pending" />
-              </Link>
+              {this.state.user ? <Tab label="logout" onClick={this.logout} /> : null}
+
             </Tabs>
         </Paper>
       )

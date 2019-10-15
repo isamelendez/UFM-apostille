@@ -87,6 +87,7 @@ renderAccordion() {
                 <p>Nombre del archivo: {row.fileName} < br /> </p>
                 <p>Estudiante: {row.correo} < br /> </p>
                 <p>Hash validacion secretaria: {row.hashSecretaria} < br /> </p>
+                <p> Hash IPFS: {row.hashIpfs} </p>
                 <Button variant="outlined" color="secondary" target="_blank" href={`http://localhost:4000/getFile?hash=${row.hashIpfs}`}>
                     Ver archivo
                 </Button>

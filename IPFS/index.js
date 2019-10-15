@@ -327,15 +327,15 @@ async function doTransaction(text){
             // res.send(response.transaction);
               console.log(response)
               console.log("Apostille is valid");
-              res.send(true)
+              res.send({ message:'valido'})
           } else {
               console.log("Apostille is invalid");
-              res.send(false)
+              res.send({ message: 'novalido'})
           }
       }, function(err) {
           console.log("Apostille is invalid");
           console.log(err);
-          res.send(false)
+          res.send({ message: 'novalido'})
       });
   }
 })
