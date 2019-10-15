@@ -25,7 +25,9 @@ class Navbar extends Component {
                 textColor="secondary"
                 centered
             >
+              <Link to={'./audit'}>
                 <Tab label="Auditar" />
+              </ Link>
               <Link to={'./upload'}>
                 <Tab label="Upload" />
               </Link>

@@ -6,7 +6,7 @@ import Upload from './Components/Upload';
 import Navbar from './Components/Navbar';
 import Login from './Components/Login';
 import Pending from './Components/Pending';
-
+import Audit from './Components/Audit';
 class App extends Component {
   render() {
     const App = () => (
@@ -16,6 +16,7 @@ class App extends Component {
           <Route path='/upload' component={Upload}/>
           <Route path='/login' component={Login}/>
           <Route path='/pending' component={Pending}/>
+          <Route path='/audit' component={Audit}/>
         </Switch>
       </div>
     )

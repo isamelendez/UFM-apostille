@@ -194,6 +194,7 @@ async function doTransaction(text){
               res.send(true)
           } else {
               console.log("Apostille is invalid");
+              res.send(false)
           }
       }, function(err) {
           console.log("Apostille is invalid");
