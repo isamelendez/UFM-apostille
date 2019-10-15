@@ -52,11 +52,12 @@ class Upload extends Component {
   }
 
   async signFile() {
-    let password = 'Bichamaster1'
-    let privateKey = 'eb3b1ec302d3562d0934bf7795d8c2cb589fcadc5103a39c4db8d7ccb71fe9b6'
-    let hash = localStorage.getItem('fileHash')
+    let password = 'Bichomaster1'
+    let privateKey = '80e7ff26969d4a009d9b6724ea8c0ba7682a21685334cd063a7835ceca8ee906'
+    let hash = localStorage.getItem('fileHash') //ipfs
+    let fileName = this.state.files[0].name
     try {
-        const resp = await fetch(`http://localhost:4000/createapostile?hash=${hash}&password=${password}&private=${privateKey}`)
+        const resp = await fetch(`http://localhost:4000/createapostile?hash=${hash}&password=${password}&private=${privateKey}&fileName=fileName`)
         var response = await resp.json();
         if( response.message.indexOf('SUCCESS') >= 0 ) {
             console.log("signed success", response)
