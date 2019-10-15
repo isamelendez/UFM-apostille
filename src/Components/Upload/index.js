@@ -19,6 +19,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 //registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);//
 
 
+
 class Upload extends Component {
 
   constructor(props){
@@ -27,6 +28,11 @@ class Upload extends Component {
       files: [],
       numPages: null,
       pageNumber: 1,
+      signed: false,
+      // password: (localStorage.getItem('email').indexOf('secretaria') > -1) ? 'Bichomaster1' : 'Bichamaster1',
+      // privateKey: (localStorage.getItem('email').indexOf('secretaria') > -1) ? '80e7ff26969d4a009d9b6724ea8c0ba7682a21685334cd063a7835ceca8ee906' : 'eb3b1ec302d3562d0934bf7795d8c2cb589fcadc5103a39c4db8d7ccb71fe9b6',
+      secretaria: 'TDNEWLQIY3N45AYUHMD6TFZ3YLY4FGKF5HHKD7M5',
+      facultad: ''
     }
   }
 
@@ -35,7 +41,8 @@ class Upload extends Component {
 
   uploadFiles(fileItems) {
     this.setState({
-      files: fileItems.map(fileItem => fileItem)
+      signed: false,
+      files: fileItems.map(fileItem => fileItem.file)
     })
   }
 
@@ -43,9 +50,30 @@ class Upload extends Component {
     this.setState({ numPages });
   }
 
+  async signFile() {
+    let password = 'Bichamaster1'
+    let privateKey = 'eb3b1ec302d3562d0934bf7795d8c2cb589fcadc5103a39c4db8d7ccb71fe9b6'
+    let hash = localStorage.getItem('fileHash')
+    try {
+        const resp = await fetch(`http://localhost:4000/createapostile?hash=${hash}&password=${password}&private=${privateKey}`)
+        var response = await resp.json();
+        if( response.message.indexOf('SUCCESS') >= 0 ) {
+            console.log("signed success", response)
+            localStorage.setItem('signedHash', response.transactionHash.data)
+            this.setState({
+              signedHash: response.transactionHash.data,
+              signed: true
+            })
+       }
+
+    } catch(err) {
+        console.log(err)
+    }
+
+}
+
   renderDocument(file) {
     const { pageNumber, numPages } = this.state;
-
     return (
       <div>
         <Document
@@ -58,6 +86,8 @@ class Upload extends Component {
       </div>
     );
   }
+
+
 
   renderTable(files) {
     const json = files
@@ -107,7 +137,7 @@ class Upload extends Component {
           </TableBody>
         </Table>
         <div className="buttonValid">
-          <Button variant="contained" color="secondary" > Validar </Button>
+          {this.state.signed ? null : <Button variant="contained" color="secondary" onClick={() => this.signFile()}> Validar </Button>}
           <div className="textContainer"> <p className="text"> Al validar los documentos usted esta firmando y autorizando la validez de los mismos. </p> </div>
         </div>
         {this.renderDocument(files[0].name)}
@@ -118,25 +148,22 @@ class Upload extends Component {
   render() {
     console.log("STATE FILES" , this.state.files)
     return(
-        <div>
+        <div className="App">
+          <Navbar />
           <header >
             <h1 >Upload files here</h1>
           </header>
           <div className="body">
-
-              <form id      =  "uploadForm"
-                enctype   =  "multipart/form-data"
-                action    =  "http://localhost:4000/addfile"
-                method    =  "post">
-
-                <input type="file" name="archivo" />
-                <input type="submit" value="Enviar archivo" name="submit" />
-            </form>
             <FilePond
               files={this.state.files}
-              allowMultiple={true}
-              maxFiles={3}
-              server='http://localhost:4000/addfile'
+              allowMultiple={false}
+              name={"file"}
+              server='http://localhost:4000/upload'
+              onprocessfile = {(error, file) => {
+                const response = JSON.parse(file.serverId)
+                console.log('done', response)
+                localStorage.setItem('fileHash', response[0].hash)
+              }}
               onupdatefiles={ (fileItems) => this.uploadFiles(fileItems) }
             />
             {(this.state.files.length > 0) ? this.renderTable(this.state.files) : <div> Upload Files </div>}

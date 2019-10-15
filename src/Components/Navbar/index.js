@@ -26,8 +26,12 @@ class Navbar extends Component {
                 centered
             >
                 <Tab label="Auditar" />
+              <Link to={'./upload'}>
                 <Tab label="Upload" />
+              </Link>
+              <Link to={'./pending'}>
                 <Tab label="Pending" />
+              </Link>
             </Tabs>
         </Paper>
       )

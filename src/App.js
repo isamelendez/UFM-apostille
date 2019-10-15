@@ -4,6 +4,8 @@ import './App.css';
 import Home from './Home';
 import Upload from './Components/Upload';
 import Navbar from './Components/Navbar';
+import Login from './Components/Login';
+import Pending from './Components/Pending';
 
 class App extends Component {
   render() {
@@ -12,6 +14,8 @@ class App extends Component {
         <Switch>
           <Route exact path='/' component={Home}/>
           <Route path='/upload' component={Upload}/>
+          <Route path='/login' component={Login}/>
+          <Route path='/pending' component={Pending}/>
         </Switch>
       </div>
     )
