@@ -47,22 +47,24 @@ class Login extends Component {
     return (
        <div className="App">
             <Navbar />
-            <form>
-                <div class="form-group">
-                {/* <label for="exampleInputEmail1">Email address</label> */}
-                {/* <input value={this.state.email} onChange={this.handleChange} type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" /> */}
-                <TextField value={this.state.email} onChange={this.handleChange} type="email" name="email" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" />
-                </div>
-                <div class="form-group">
-                {/* <label for="exampleInputPassword1">Password</label> */}
-                {/* <input value={this.state.password} onChange={this.handleChange} type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password" /> */}
-                <TextField value={this.state.password} onChange={this.handleChange} type="password" name="password" id="exampleInputPassword1" placeholder="Password" />
-                </div>
-                {/* <button type="submit" onClick={this.login} class="btn btn-primary">Login</button> */}
-                <Button type="submit"color="" variant="outlined" onClick={this.login} >
-                  Login
-                </Button>
-            </form>
+            <div class="containerForm">
+              <form >
+                  <div class="form-group">
+                  {/* <label for="exampleInputEmail1">Email address</label> */}
+                  {/* <input value={this.state.email} onChange={this.handleChange} type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" /> */}
+                  <TextField value={this.state.email} onChange={this.handleChange} type="email" name="email" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email" />
+                  </div>
+                  <div class="form-group">
+                  {/* <label for="exampleInputPassword1">Password</label> */}
+                  {/* <input value={this.state.password} onChange={this.handleChange} type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password" /> */}
+                  <TextField value={this.state.password} onChange={this.handleChange} type="password" name="password" id="exampleInputPassword1" placeholder="Password" />
+                  </div>
+                  {/* <button type="submit" onClick={this.login} class="btn btn-primary">Login</button> */}
+                  <Button type="submit"color="secondary" variant="outlined" onClick={this.login} >
+                    Login
+                  </Button>
+              </form>
+            </div>
     </div>
     );
   }

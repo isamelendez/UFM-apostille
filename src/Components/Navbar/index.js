@@ -16,7 +16,7 @@ class Navbar extends Component {
     this.logout = this.logout.bind(this);
     this.state = {
       rows: [],
-      user: {}
+      user: ''
     }
   }
 
@@ -59,7 +59,7 @@ class Navbar extends Component {
             >
               <img className="logo" src={logo} />
               <Link to={'./audit'}>
-                <Tab label="Auditar" />
+                <Tab label="Auditar certificado" />
               </ Link>
               <Link to={this.state.user ? (localStorage.getItem('emailLogged').indexOf('decanatura') >=0) ? './pending' : './upload' : './'}>
                 <Tab label="Certificados UFM" />

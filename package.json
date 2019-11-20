@@ -12,6 +12,7 @@
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-filepond": "^7.0.1",
+    "react-load-image": "^0.1.7",
     "react-pdf": "^4.1.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0"
@@ -36,5 +37,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "file-loader": "^4.2.0",
+    "url-loader": "^2.2.0"
   }
 }

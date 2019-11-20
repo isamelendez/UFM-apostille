@@ -26,7 +26,7 @@ class Pdf extends Component {
         doc.text(40, 300, 'Fecha:')
 
         doc.setFontType('italic')
-        doc.text(55, 320, '15/OCT/2019')
+        doc.text(55, 320, '30/OCT/2019')
 
         doc.setFontType('normal')
         doc.text(40, 355, 'Hash del Archivo')

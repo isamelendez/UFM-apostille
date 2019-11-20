@@ -5,6 +5,7 @@
     padding: 0 100px;
     box-sizing: border-box;
     margin-top: 25px;
+
   }
 
 .heading {
@@ -14,7 +15,9 @@
 
 .App {
     width: 100%;
-    height: 100%;
+    height: 100vh !important;
+    background-image: url("mountains.svg");
+    background-size: cover;
 }
 
 h1 {

@@ -45,7 +45,7 @@ generarPDF(hashSecre, hashDir, hashIPFS, nombre){
 
         doc.setFontType('italic')
         doc.setFontSize(12)
-        doc.text(55, 320, '15/OCT/2019')
+        doc.text(55, 320, '30/OCT/2019')
 
         doc.setFontType('bold')
         doc.setFontSize(14)
@@ -116,11 +116,14 @@ async signFile(hash, filename) {
     let password = 'Bichamaster1'
     let privateKey = 'eb3b1ec302d3562d0934bf7795d8c2cb589fcadc5103a39c4db8d7ccb71fe9b6'
     try {
-        const resp = await fetch(`http://localhost:4000/apostiledecano?hash=${hash}&password=${password}&private=${privateKey}&nombre=${filename}`) //CAMBIAAAAR
+        const resp = await fetch(`http://localhost:4000/apostiledecano?hash=${hash}&password=${password}&private=${privateKey}&nombre=${filename}`) 
+        const mail = fetch(`http://localhost:4000/mail?ipfs=${hash}`)
+        //CAMBIAAAAR
         var response = await resp.json();
         if( response.message.indexOf('SUCCESS') >= 0 ) {
             console.log("signed success", response)
             localStorage.setItem('signedHash', response.transactionHash.data)
+            alert(`Archivo validado, ID de transaccion: ${response.transactionHash.data}`)
             this.setState({
               signedHash: response.transactionHash.data,
               signed: true
@@ -159,7 +162,7 @@ renderAccordion() {
                 <Button variant="outlined" color="secondary" onClick={() => this.signFile(row.hashIpfs, row.fileName)}>
                     Validar archivo
                 </Button>
-                <Button variant="outlined" color="secondary" onClick={() => this.generarPDF(row.hashSecretaria, hash, row.hashIpfs, row.fileName)}>
+                <Button variant="outlined" color="secondary" onClick={() => this.generarPDF(row.hashSecretaria, this.state.signedHash, row.hashIpfs, row.fileName)}>
                     Generar PDF
                 </Button>
               </Typography>
@@ -173,9 +176,9 @@ renderAccordion() {
 
 render() {
     return(
-        <div className="App">
+        <div class="App">
             <Navbar />
-            <h1> Pedientes por validar </h1>
+            <h1> Pendientes por validar </h1>
             {(this.state.documents.length > 0) ? this.renderAccordion() : <h1>No hay archivos pendientes</h1>}
         </div>
     )

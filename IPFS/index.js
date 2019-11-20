@@ -9,6 +9,7 @@ let nem = require("nem-sdk").default;
 var transferTransaction = nem.model.objects.get("transferTransaction");
 const pdf = require('pdf-parse');
 var mysql      = require('mysql');
+const nodemailer = require('nodemailer');
 
 app.use(function(req,res,next){
   res.header('Access-Control-Allow-Origin', '*');
@@ -353,6 +354,8 @@ async function doTransaction(text){
 //   });
 // })
 
+
+
 app.get('/createapositilesecretaria', (req, res) => {
   // http://localhost:4000/createapostilesecretaria?filename=%22test.pdf%22&ipfs=%22slkdfj8u2ofj%22&hashsecre=%22sfdsd8f97897dfs%22&correo=%22hola@ufm.edu%22
   var filename = req.query.filename;
@@ -388,6 +391,35 @@ app.get('/getdocuments', (req, res) => {
   });
 })
 
+app.get('/mail', function (req, res, next) {
+  const ipfs = req.query.ipfs
+  let transporter = nodemailer.createTransport({
+      service: 'gmail',
+      secure: false,
+      port:25,
+      auth: {
+          user: 'joaquinfigueroa@ufm.edu',
+          pass: '29a37b760e'
+      },
+      tls:{
+          rejectUnauthorized: false
+      }
+  });
+  let HelperOptions = {
+      from: '"Joaquin" <joaquinfigueroa@ufm.edu',
+      to: 'imelendez@ufm.edu',
+      subject: 'Apostillado UFM',
+      text: `Estimado estudiante: Su archivo ha sido validado por la decanatura. Puede encontrarlo en: http://localhost:4000/getFile?hash=${ipfs}`
+  };
+  transporter.sendMail(HelperOptions, (error, info) =>{
+      if(error){
+          console.log(error);
+      }
+      console.log("the message was sent");
+      console.log(info);
+  });
+  
+  });
 
 
 app.listen(4000, () => console.log('App listening on port 4000!'))

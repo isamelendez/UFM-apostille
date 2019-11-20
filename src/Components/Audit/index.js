@@ -108,7 +108,7 @@ class Audit extends Component {
         <div className="App">
           <Navbar />
           <header >
-            <h1 >Upload files here</h1>
+            <h1 >Suba el archivo que desea auditar</h1>
           </header>
           <div className="body">
             <FilePond
